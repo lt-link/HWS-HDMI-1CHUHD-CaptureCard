@@ -304,7 +304,7 @@ static int hws_vidioc_enum_fmt_vid_cap(struct file *file, void *priv_fh,struct v
 		    //printk("%s..pixfmt=%d.\n",__func__,f->index);
 		    f->index = index;
 		    f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-		    strlcpy(f->description, pixfmt->name, sizeof(f->description));
+		    memcpy(f->description, pixfmt->name, strlen(pixfmt->name));
 		    f->pixelformat=pixfmt->fourcc;
 		}
 	}
@@ -3167,7 +3167,7 @@ int hws_video_register(struct hws_pcie_dev *dev)
 		q->io_modes = VB2_READ | VB2_MMAP | VB2_USERPTR;
 		//q->io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF | VB2_READ;
 		q->gfp_flags = GFP_DMA32;
-		q->min_buffers_needed = 2;
+		//q->min_buffers_needed = 2;
 		q->drv_priv = &(dev->video[i]);
 		q->buf_struct_size = sizeof(struct hwsvideo_buffer);
 		q->ops = &hwspcie_video_qops;
@@ -3413,7 +3413,7 @@ int hws_audio_register(struct hws_pcie_dev *dev)
 		 snd_pcm_lib_preallocate_pages_for_all(
             pcm,
             SNDRV_DMA_TYPE_CONTINUOUS,
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6,1,0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,19,0))
 			card->dev,
 #else
             snd_dma_continuous_data(GFP_KERNEL),
