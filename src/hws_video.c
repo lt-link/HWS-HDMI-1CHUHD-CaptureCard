@@ -8,8 +8,6 @@
 #include <media/videobuf2-dma-contig.h>
 #include <media/videobuf2-vmalloc.h>
 #include <media/videobuf2-dma-contig.h>
-#include "hws.h"
-#include "hws_reg.h"
 #include <sound/core.h>
 #include <sound/control.h>
 #include <sound/pcm.h>
@@ -17,6 +15,9 @@
 #include <sound/initval.h>
 #include <media/v4l2-ctrls.h>
 #include <media/v4l2-device.h>
+#include "hws.h"
+#include "hws_reg.h"
+#include "hws_compat.h"
 
 static void hws_adapters_init(struct hws_pcie_dev *dev);
 static void hws_get_video_param(struct hws_pcie_dev *dev,int index);
@@ -641,7 +642,7 @@ static int hws_open(struct file *file)
     /* v4l2 file-handle */
     v4l2_fh_init(&ctx->fh, &videodev->vdev);
     file->private_data = &ctx->fh;
-    v4l2_fh_add(&ctx->fh);
+    HWS_V4L2_FH_ADD(&ctx->fh, file);
 
     /* per-file vb2 queue */
     q = &ctx->vbq;
@@ -659,7 +660,7 @@ static int hws_open(struct file *file)
 
     ret = vb2_queue_init(q);
     if (ret) {
-        v4l2_fh_del(&ctx->fh);
+        HWS_V4L2_FH_DEL(&ctx->fh,file);
         v4l2_fh_exit(&ctx->fh);
         kfree(ctx);
         file->private_data = NULL;
@@ -704,7 +705,7 @@ static int hws_release(struct file *file)
     vb2_queue_release(&ctx->vbq);
 
     /* v4l2 fh cleanup */
-    v4l2_fh_del(&ctx->fh);
+    HWS_V4L2_FH_DEL(&ctx->fh,file);
     v4l2_fh_exit(&ctx->fh);
     file->private_data = NULL;
 
