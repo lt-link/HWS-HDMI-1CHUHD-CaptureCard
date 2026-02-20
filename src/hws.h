@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-only
 /*
-
-*/
+ * Longtimetech HWS V4L2 driver
+ * Copyright (C) 2025 Longtimetech
+ */
 
 #ifndef _HWS_PCIE_H_
 #define _HWS_PCIE_H_
