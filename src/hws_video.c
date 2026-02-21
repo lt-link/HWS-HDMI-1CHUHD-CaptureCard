@@ -266,7 +266,7 @@ static int hws_vidioc_querycap(struct file *file, void *priv, struct v4l2_capabi
 	//printk( "%s\n", __func__);
 	strcpy(cap->driver, KBUILD_MODNAME);
 	sprintf(cap->card, "%s %d",HWS_VIDEO_NAME,vi_index);
-	strcpy(cap->bus_info, "HWS");
+	sprintf(cap->bus_info, "HWS-%s-%d",HWS_VIDEO_NAME,vi_index);
 	cap->device_caps =	V4L2_CAP_VIDEO_CAPTURE |V4L2_CAP_STREAMING;
 	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
 	//printk( "%s(IN END  )\n", __func__);
@@ -1461,11 +1461,6 @@ static int hws_queue_setup(struct vb2_queue *q,
 	spin_lock_irqsave(&pdx->videoslock[videodev->index], flags);	
 	size = 2* videodev->current_out_width * videodev->curren_out_height; // 16bit
 	//printk( "%s(%d)->%d[%d?=%d]\n", __func__,videodev->index,videodev->fileindex,sizes[0],size);
-	if(videodev->fileindex >1)
-	{
-		spin_unlock_irqrestore(&pdx->videoslock[videodev->index], flags);
-		return -EINVAL;
-	}
 	//printk( "q->num_buffers = %d *num_buffers =%d \n", q->num_buffers,*num_buffers);
 	//if (tot_bufs < 2)
 	//	tot_bufs = 2;
