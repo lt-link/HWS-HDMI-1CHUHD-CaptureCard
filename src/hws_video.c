@@ -1614,10 +1614,9 @@ static const struct vb2_ops hwspcie_video_qops = {
 	.buf_prepare  = hws_buffer_prepare,
 	.buf_finish = hws_buffer_finish,
 	.buf_queue    = hws_buffer_queue,
-	.wait_prepare = vb2_ops_wait_prepare,
-	.wait_finish = vb2_ops_wait_finish,
 	.start_streaming = hws_start_streaming,
 	.stop_streaming = hws_stop_streaming,
+  HWS_VB2_WAIT_OPS
 };
 
 /*
@@ -1725,10 +1724,9 @@ static const struct vb2_ops hwspcie_video_multi_qops = {
     .buf_prepare    = hws_buffer_prepare_multi,
     .buf_finish     = hws_buffer_finish,
     .buf_queue      = hws_buffer_queue_multi,
-    .wait_prepare   = vb2_ops_wait_prepare,
-    .wait_finish    = vb2_ops_wait_finish,
     .start_streaming= hws_start_streaming_multi,
     .stop_streaming = hws_stop_streaming_multi,
+    HWS_VB2_WAIT_OPS
 };
 //-----------------------------------------
 const unsigned char  g_YUVColors [MAX_COLOR][3] = {
